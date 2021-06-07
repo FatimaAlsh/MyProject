@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script> 
 <html lang="en" style="height: 100%">
 <head>
 <title>ACE in Action</title>
@@ -8,7 +9,7 @@
     
     #parent {
     width:50%;
-    height: 400px;
+    height: 300px;
     display:inline-block;
     position:relative;
 }
@@ -20,9 +21,20 @@
     left: 0;
     font-size: large;
 }
-#footer{
-text-align: center;
+
+h1{
+    text-transform: capitalize;
+    text-align: center;
 }
+#footer-container{
+    position:absolute;
+    bottom:0;
+    left: 0;
+   width: 100%;
+    background-color: grey;
+}
+p{
+    text-align: center;
 }
 </style>
 </head>
@@ -38,17 +50,62 @@ text-align: center;
     }
 </div>
 </div>
+<!-- libraries -->
 
-<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<button id="clickMe">Dark Mode</button>
 <script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
+
+    //initiate ace editor
+    var editor = ace.edit("editor"); 
+    editor.setTheme("ace/theme/eclipse"); 
     editor.getSession().setMode("ace/mode/javascript");
-    editor.session.setUseSoftTabs(true);
+    editor.session.setUseSoftTabs(true); // using spaces instead of the tab character ( '\t' )
+
+    //create edit session
+    //var EditSession = ace.require("ace/edit_session").EditSession;
+    //var UndoManager = ace.require("ace/undomanager").UndoManager;
+    //var session = new EditSession('');
+    //session.setUndoManager(new UndoManager());
+    //session.setMode("ace/mode/javascript");
+    //editor.setSession(session);
+    session = ace.createEditSession('lalalala here is the code', "ace/mode/javascript")
+    editor.setSession(session);
+
+
+//hanging bt dark and light mode
+    document.getElementById("clickMe").addEventListener("click", function() {
+    editor.setTheme("ace/theme/monokai");
+    document.getElementById("clickMe").innerHTML="Light Mode"; 
+    
+});
+//-----------------------------------------
+
+  
+    editor.getSession().on("changeAnnotation", function(){
+        var annot = editor.getSession().getAnnotations();
+       
+        for (var key in annot){
+           document.getElementById("output").innerHTML= " line no. "+ annot[key].row+1 + " " + annot[key].type+ " " +annot[key].text;
+        
+        }
+        if (annot.length = 0) {
+            document.getElementById("output").innerHTML= "correct";
+        }
+        
+    });
+    
+
+
 </script>
+<div id="output"></div>
 </body>
 <footer id="footer">
-    &copy 2021 Copy rights reserved for FA 
+    <div id="footer-container">
+        <p>
+    &copy 2021 Copy rights reserved for FA </p>
+    </div>
+    
 </footer>
 </html>
 
