@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <!-- libraries -->
-<script src="http://ajaxorg.github.io/ace-builds/src/ace.js">
-</script> 
-<script src="http://ajaxorg.github.io/ace-builds/src/ext-language_tools.js">
-</script> 
+
+<script src="http://ajaxorg.github.io/ace-builds/src/ace.js"></script> 
+
 <!--<script src="../build/src-noconflict/ace.js"></script>-->
+
 <!-- load ace language tools -->
+<script src="http://ajaxorg.github.io/ace-builds/src/ext-language_tools.js"></script> 
 
 <html lang="en" style="height: 100%">
 <head>
 
-
-<title>ACE in Action</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><!--Jquery-->
+   
+<title>MyProject</title>
 
 <!--elements styling-->
 <style type="text/css" media="screen">
+*{
+    box-sizing:border-box;
+}
 
-    
     #parent {
     width:40%;
-    height: 250px;
+    height: 200px;
     display:inline-block;
-    position:relative;
-    border: solid 1 px black;
+    position: relative;
+    
 }
 #editor {
     position: absolute;
@@ -30,10 +34,10 @@
     right: 0;
     bottom: 0;
     left: 0;
-    font-size: large;
+    font-size: medium;
 }
 
-h1{
+h2{
     text-transform: capitalize;
     text-align: center;
 }
@@ -43,99 +47,188 @@ h1{
     left: 0;
    width: 100%;
    background-color: grey;
+  
 }
+
 p{
     text-align: center;
 }
-#output{
+#errors{
     position:relative;
     color:red;
     width:40%;
-    height: 100px; ;
+   
+}
+
+
+#console{
+
+background-color:thistle;
+padding: 10px;
+height: 100px; ;
     overflow-y: scroll;
     overflow-x: scroll;
 }
-p#errortitle{
-    text-align: left;
-    color:white;
-    position:absoloute;
-    top:0;
-    left:0;
-    background-color: lightcoral;
-
+#empty{
+  
+    height : 300px;
 }
+#visual{
+   height: 300px;
+    background-color:slategrey;
+  
+}
+nav{
+    width:40%;
+    height:50%;
+    background-color: teal;
+}
+.row{
+    width:100%;
+}
+.col-lg-1{
+float: left;
+width:8.33%;}
+.col-lg-2{
+float: left;
+width:16.66%;}
+.col-lg-4{
+float: left;
+width:33.33%;
+border: 2px grey;
+}
+.col-lg-5{
+float: left;
+width:41.66%;
+border:1px solid grey;
+}
+.col-lg-6{
+float: left;
+width:50%;
+border:1px solid grey;
+}
+.col-lg-12{
+    width:100%;
+    float:left;
+}
+section{
+position: absolute;
+top:200px;
+float: left;
+}
+
 </style>
+
+
 </head>
 
 
 <header> <!-- header starts-->
-    <h1> watch your code movin' </h1>
+    <h2> watch your code movin' </h2>
 </header> <!-- header ends-->
 
 <body>
-<div id= "parent">
-    <div id="editor">function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-    }
-</div>
-</div>
+  <!------------------- HTML elements -------------------------------------> 
 
-<button id="btntheme">Dark Mode</button>
+    
+    <div class="row"><nav>
+                    <button id="Execute" >Execute</button>
+                    <button id="btntheme2">Mode</button>
+            </nav> 
+        <div id="parent" class="col-lg-5">
+           
+            
+               
+                <div id="editor"> </div>
+                <section>
+                    <button id="n1" >First</button>
+                <button id="&raquo;">previous</button> 
+                <button id="&laquo;" >next</button> 
+                <button id="n1" >last</button>
+                </section>
+                 
+            
+        </div>
+       
+        <div class="col-lg-1">
+            <div id="empty"></div>
+        </div>
 
+        <div class="col-lg-5">
+            <div id="visual"> </div>
+       <pre  id="console" class="col-lg-12"> Console</pre>
+        </div>
+
+      </div><!-- end of row dev -->
+      
+
+  
 
 <script>
+   // ----declaring ACE editor ----------------------
     var langTools = ace.require("ace/ext/language_tools"); // trigger extension for auto complete 
     var editor = ace.edit("editor"); // create ace editor 
-    editor.setTheme("ace/theme/monokai"); // theme
+    editor.setTheme("ace/theme/Dawn");
     editor.getSession().setMode("ace/mode/javascript"); //editor's lang
 
-    //enable auto complete 
+    //enable auto complete ------------------------------------------->
     editor.setOptions({ 
+
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true
     });
-
+    //-------editor display features ------------------------------------------------------->
     editor.setDisplayIndentGuides(true);//????
+    editor.session.setUseSoftTabs(true); // using spaces instead of the tab character ('\t' )
+    editor.setHighlightActiveLine(true); // default
 
-    editor.session.setUseSoftTabs(true); // using spaces instead of the tab character ( '\t' )
-    
 
-   //create New session 
-    session = ace.createEditSession('//Write your code here', "ace/mode/javascript") //session's prog language
+   //---------create New session------------------------------------------------ 
+    session = ace.createEditSession('//Write your code here\n function foo(items){ \n\tvar x = "All this is syntax highlighted";\n\treturn x;\n}', "ace/mode/javascript") //session's prog language
     editor.setSession(session);
     editor.session.setUseWrapMode(true); // alowing text to wrap if width is insufficient
 
-//-----------------------------------------
-// getting the error messages and print them in div =output
-  
-    editor.getSession().on("changeAnnotation", function(){
+    
+ 
+ 
+//---------------------Execute Button ---------------------------------->
+
+           
+    document.getElementById("Execute").addEventListener("click", function(){
+   
+        var haserror=editor.getSession().getAnnotations().length;
         var annot = editor.getSession().getAnnotations();
-       var errormessages ="";
-        for (var key in annot){
-          
-            errormessages += " Line no."+ Number((annot[key].row)+ 1) +" --> " +annot[key].type +" : " +annot[key].raw + "<br>";
-        
+        if(haserror===0){
+            var x=  document.getElementById("console")
+            x.innerHTML="Console"+ "<br>";
+            x.innerHTML+="&raquo;  "+(eval(editor.getSession().getValue()));
         }
+        else {
+            var errormessages ="";
+            for (var key in annot){
+                errormessages += "\n&raquo;  Line no."+ Number((annot[key].row)+ 1) +" --> " 
+                +annot[key].type +" : " +annot[key].raw;
+            }
+            $("#console").append(errormessages)
+        }
+   }); 
+//-------------------Dark Mode Button ------------------------------------->
+
+    document.getElementById("btntheme2").addEventListener("click", function(){
+         editor.setTheme("ace/theme/twilight");
+    }); 
     
-        document.getElementById("output").innerHTML =errormessages ;
-    });
+
+ 
     
-    //changing bt dark and light mode
-    document.getElementById("btntheme").addEventListener("click", function() {
-    editor.setTheme("ace/theme/monokai");
-    document.getElementById("btntheme").innerHTML="Light Mode"; 
-    
-});
-  
 
 </script>
 
+<!-------------------------------------END OF SCRIPT----------------------------------------------------------->
 
-<div id="output">
-    <p id="errortitle">Error Messages</p>
-</div>
+
+
 </body>
 <footer id="footer">
     <div id="footer-container">
