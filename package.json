@@ -1,0 +1,31 @@
+{
+  "name": "babel-plugin-tester",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@babel/runtime": "^7.14.5",
+    "core-js": "^2.6.12"
+  },
+  "scripts": {
+    "babel": "babel src -d dist"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.5"
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FatimaAlsh/MyProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FatimaAlsh/MyProject/issues"
+  },
+  "homepage": "https://github.com/FatimaAlsh/MyProject#readme",
+  "description": ""
+}
