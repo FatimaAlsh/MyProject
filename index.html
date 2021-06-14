@@ -211,43 +211,33 @@ float: left;
              <div id="editor-container">
                 <div id="editorMenu">
             <button class="btn" onclick="codeSample()"><i class="fa fa-home"></i> Sample </button>
-            <button class="btn" onclick="loadFileAsText()"><i class="fa fa-file"></i> Open</button>
+            <button class="btn"><i class="fa fa-file"></i> Open</button>
             <button class="btn" onclick="downloadHTML()"><i class="fa fa-download"></i> Download</button>
             <button class="btn" onclick="cleanEditor()"><i class="fa fa-close" ></i> Clear</button>
             <button class="btn" onclick="darkMode()"><i class="fa fa-play" id="btntheme2"></i> Mode</button>
-            <input type="file" name="inputfile"
-			id="inputfile">
-	<br>
-
-	<pre id="output"></pre>
+            <input type="file" name="inputfile" id="inputfile"><br><pre id="output"></pre>
                 </div>
-    
+                
             <div id="parent">
             <div id="editor"> </div>
             <div id="statusBar">     Ready</div>
            
            
-            <tr>
-                <td>Select a File to Load:</td>
-                <td><input type="file" id="fileToLoad"></td>
-                <td><button onclick="loadFileAsText()">Load Selected File</button><td>
-            </tr>
+            
 
-<script>
-    
-
-   
-function loadFileAsText(){
-  var fileToLoad = document.getElementById("fileToLoad").files[0];
-  var fileReader = new FileReader();
-  fileReader.onload = function(fileLoadedEvent){
-      var textFromFileLoaded = fileLoadedEvent.target.result;
-      document.getElementById("console").value = textFromFileLoaded;
-  };
-
-  fileReader.readAsText(fileToLoad, "UTF-8");
-}
-</script>
+            <script type="text/javascript">
+                document.getElementById('inputfile')
+                    .addEventListener('change', function() {
+                    
+                    var fr=new FileReader();
+                    fr.onload=function(){
+                        document.getElementById('console')
+                                .textContent=fr.result;
+                    }
+                    
+                    fr.readAsText(this.files[0]);
+                })
+                </script>
     </div>
                  
                  
